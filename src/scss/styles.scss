@@ -1,4 +1,5 @@
 @import '_grid';
+@import '_fonts';
 
 * {
 	box-sizing: border-box;
@@ -8,15 +9,17 @@
  box-sizing: border-box;
 }
 
-
 html, body {
   height: 100%;
 }
 
 body {
+	color: #000;
   display: flex;
   flex-direction: column;
-	font-family: 'PT Sans', sans-serif;
+	font-family: 'Source Sans Pro', sans-serif;
+	font-size: 14px;
+	line-height: 15px;
 	margin: 0;
 	padding: 0;
 }
@@ -31,15 +34,165 @@ footer {
 	padding: 20px 0 10px;
 }
 
-.logos {
-	img {
-		margin-right: 40px;
-		margin-bottom: 0;
-		vertical-align: top;
-		width: auto;
+ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+a {
+	color: #007CE0;
+	text-decoration: none;
+}
+
+h2 {
+	background-color: #EDF6FD;
+	border-bottom: 1px solid #CCC;
+	font-family: 'Gotham-Bold', sans-serif;
+	font-size: 16px;
+	font-weight: normal;
+	line-height: 41px;
+	padding-left: 22px;
+}
+
+h3 {
+	font-family: 'Gotham-Bold', sans-serif;
+	font-size: 12px;
+	line-height: 21px;
+	font-weight: normal;
+}
+
+h4 {
+	font-family: 'Gotham-Bold', sans-serif;
+	font-size: 13px;
+	line-height: 13px;
+	font-weight: normal;
+}
+
+p {
+	font-family: 'Source Sans Pro', sans-serif;
+	font-size: 14px;
+	line-height: 15px;
+}
+
+.small {
+	font-size: 12px;
+	line-height: 14px;
+	margin: 0;
+}
+
+i[class^='humanitarianicons-'] {
+	color: #007ce1;
+}
+
+.num {
+	font-family: 'Gotham-Light', sans-serif;
+	font-size: 52px;
+	margin-left: -4px;
+	padding: 10px 0;
+	span {
+		font-size: 26px;
 	}
 }
 
+.date {
+	color: #888;
+}
+
+.key-figure {
+	border-bottom: 1px solid #CCC;
+	padding-bottom: 15px;
+}
+
+ul.actions {
+	align-items:  center;
+	display: flex;    
+	justify-content: flex-end;
+	line-height: 16px;
+	list-style-type: none;
+	padding: 0;
+	li {
+		border-right: 1px solid #888;
+		padding: 0 20px;
+		&:last-child {
+			border: 0;
+		}	
+		&.social {
+			display: flex;
+			font-size: 24px;
+			padding: 0 0 0 14px;
+			a {
+				color: #000;
+				padding: 0 6px;
+			}
+		}
+	}
+}
+
+//c3 styles
+.c3-xgrid-focus { display: none; }
+
+.c3-axis-y {
+	transform: translateY(5px);
+	.tick {
+		text {
+			fill: #929497;
+			transform: translateY(-20px);
+		}
+		line { 
+			opacity: 0; 
+		}
+	}
+	path {
+		stroke: #929497;
+	}
+}
+
+.c3-chart-text {
+	text {
+		transform: translateX(-10px);
+    text-anchor: end;
+	}
+	&.c3-target-data1 {
+		text {
+			fill: #FFF !important;
+		}
+	}
+	&.c3-target-data2 {
+		text {
+			fill: #2d78bd !important;
+		}
+	}
+	&.c3-target-data3 {
+		text {
+			fill: #f26b61 !important;
+		}
+	}
+}
+
+.tooltip-custom {
+	background-color: #000;
+	border-radius: 3px;
+	color: #FFF;
+	font-size: 11px;
+	line-height: 28px;
+	padding: 0 15px;
+	transform: translateY(-35px);
+  &:after {
+    border-color: rgba(0, 0, 0, 0);
+    border: solid transparent;
+    border-top-color: #000;
+    border-width: 5px;
+    content: " ";
+    height: 0;
+    left: 50%;
+    margin-left: -5px;
+    pointer-events: none;
+    position: absolute;
+    top: 100%;
+    width: 0;
+  }
+}
 
 @media only screen and (max-width: 767px) {
 	.logos {
