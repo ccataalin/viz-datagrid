@@ -6,7 +6,7 @@
   margin: 0 auto;
   max-width: 1173px;
   &.center--vertical {
-		align-items: center;
+    align-items: center;
   }
 }
 
@@ -16,6 +16,14 @@
 
 .col-3 {
  grid-column: span 3;
+}
+
+.col-4 {
+ grid-column: span 4;
+}
+
+.col-6 {
+  grid-column: span 6;
 }
 
 .col-7 {
@@ -38,6 +46,9 @@
   }
 
   .col-2,
+  .col-3,
+  .col-4,
+  .col-6,
   .col-8,
   .col-10 {
     grid-column: 1 / -1;

@@ -1,8 +1,8 @@
 {
-  "name": "viz-starter",
+  "name": "viz-datagrid",
   "version": "1.0.0",
   "description": "",
-  "homepage": "https://github.com/baripembo/viz-data-grid.git",
+  "homepage": "https://github.com/baripembo/viz-datagrid.git",
   "main": " ",
   "scripts": {
     "start": "http-server ./dist -c-1 -p 3000",
