@@ -1,33 +1,37 @@
 $( document ).ready(function() {
-  const DATA_URL = 'https://proxy.hxlstandard.org/data.objects.json?tagger-match-all=on&tagger-01-header=date&tagger-01-tag=%23date&tagger-02-header=category&tagger-02-tag=%23category&tagger-03-header=country&tagger-03-tag=%23country%2Bcode%2Bv_iso2&tagger-04-header=metric&tagger-04-tag=%23metric&tagger-05-header=percentage&tagger-05-tag=%23percentage&tagger-06-header=subcategory+count&tagger-06-tag=%23subcategory%2Bcount&tagger-07-header=dataset+count&tagger-07-tag=%23dataset%2Bcount&url=https%3A%2F%2Fdocs.google.com%2Fspreadsheets%2Fd%2Fe%2F2PACX-1vTnZMN1guJCB44f-O6iP-JpNum4NJdL5Op5GEbrkAayk_V19UkmO56YzQ2vSsfVCVWl5eyOT-Yhh4Y-%2Fpub%3Fgid%3D1103779481%26single%3Dtrue%26output%3Dcsv&header-row=1&dest=data_view';//https://proxy.hxlstandard.org/data.objects.json?dest=data_view&url=https%3A%2F%2Fdocs.google.com%2Fspreadsheets%2Fd%2F1MnsOt9qrsgFmBakkEipXgElJze4B3CYUG36IB5zIdiE%2Fedit%3Fusp';
+  const DATA = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTnZMN1guJCB44f-O6iP-JpNum4NJdL5Op5GEbrkAayk_V19UkmO56YzQ2vSsfVCVWl5eyOT-Yhh4Y-/pub?gid=1103779481&single=true&output=csv';
+  const DATA_DATA_COUNTS = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTnZMN1guJCB44f-O6iP-JpNum4NJdL5Op5GEbrkAayk_V19UkmO56YzQ2vSsfVCVWl5eyOT-Yhh4Y-/pub?gid=733089483&single=true&output=csv';
+  const DATA_COUNTRY_NAMES = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTnZMN1guJCB44f-O6iP-JpNum4NJdL5Op5GEbrkAayk_V19UkmO56YzQ2vSsfVCVWl5eyOT-Yhh4Y-/pub?gid=735983640&single=true&output=csv';
+  
+
   var isMobile = $(window).width()<600? true : false;
   var countryCount, categoryCount, rowCount = 0;
   var date;
   var metricColors = {data1: '#007CE1', data2: '#C0D7EB', data3: '#E6E7E8'};
   var metricNames = {data1: 'Complete', data2: 'Incomplete', data3: 'No data'}
+  var countryNames, datasetCounts = [];
 
   function getData() {
-    loadData(DATA_URL, function (responseText) {
-      parseData(JSON.parse(responseText));
+    Promise.all([
+      d3.csv(DATA),
+      d3.csv(DATA_DATA_COUNTS),
+      d3.csv(DATA_COUNTRY_NAMES)
+    ]).then(function(data){
+      countryNames = data[2];
+      datasetCounts = data[1];
+      parseData(data[0]);
     });
-  }
-
-  function loadData(dataPath, done) {
-    var xhr = new XMLHttpRequest();
-    xhr.onload = function () { return done(this.responseText) }
-    xhr.open('GET', dataPath, true);
-    xhr.send();
   }
 
   function parseData(data) {
     var format = d3.timeFormat("%b %d, %Y");
-    var d = (data[0]['#date']).split('-');
+    var d = (data[0]['Date']).split('-');
     d = new Date(d[0], d[1]-1, d[2]);
     date = format(d);
 
     //group the data by category
     var groupByCategory = d3.nest()
-      .key(function(d){ return d['#category']; })
+      .key(function(d){ return d['Category']; })
       .entries(data);
     categoryCount = groupByCategory.length;
     groupByCategory.sort(compare);
@@ -35,16 +39,17 @@ $( document ).ready(function() {
 
     //group the data by country
     var groupByCountry = d3.nest()
-      .key(function(d) { return d['#country+code+v_iso2']; })
-      .key(function(d) { return d['#metric']; })
-      .key(function(d) { return d['#category']; })
-      .rollup(function(v) { return v[0]['#percentage']; })
+      .key(function(d) { return d['ISO3']; })
+      .key(function(d) { return d['Metric']; })
+      .key(function(d) { return d['Category']; })
+      .rollup(function(v) { return v[0]['Percentage']; })
       .entries(data);
     countryCount = groupByCountry.length;
 
     //generate charts
     generateCharts(groupByCategory, groupByCountry);
   }
+
 
   function generateCharts(categories, countries) {
     var chartName, chartData;
@@ -62,7 +67,9 @@ $( document ).ready(function() {
       //create chart markup for each country
       chartData = [];
       chartName = country.key + "Chart";
-      $('.charts').append("<div class='col-2 country-chart'><div class='chart-header'><img src='assets/flags/__afghanistan.png'/><div>"+country.key+"<span>22 datasets</span></div></div><div class='chart " + chartName + "'></div></div>");
+      var countryName = getCountryName(country.key);
+      var datasetCount = getDatasetCount(country.key);
+      $('.charts').append("<div class='col-2 country-chart'><div class='chart-header'><img src='assets/flags/__" + country.key + ".png'/><div>" + countryName + "<span>" + datasetCount + " datasets</span></div></div><div class='chart " + chartName + "'></div></div>");
       
       //metric 
       country.values.forEach(function(metric, index) {
@@ -143,9 +150,11 @@ $( document ).ready(function() {
     createKeyFigure('Number of Sub-categories', 0);
   }
 
+
   function createKeyFigure(title, value) {
     return $('.overview').append("<div class='key-figure col-3'><h3>"+ title +"</h3><div class='num'>"+ value +"</div><p class='date small'>"+ date +"</p></div></div>");
   }
+
 
   function createCategories(categories) {
     rowCount++;
@@ -157,6 +166,7 @@ $( document ).ready(function() {
       $('.category-list' + rowCount + ' ul').append("<li>" + cat + " <div><i class='humanitarianicons-" + icons[index] + "'></i></div></li>");
     });
   }
+
 
   function createBarChart(chartName, chartData) {
     var chart = c3.generate({
@@ -207,6 +217,19 @@ $( document ).ready(function() {
       }
     });
   }
+
+
+
+  function getCountryName(iso3) {
+    const result = countryNames.filter(country => country['ISO-alpha3 code'] == iso3);
+    return result[0]['M49 Country or Area'];
+  }
+
+  function getDatasetCount(iso3) {
+    const result = datasetCounts.filter(country => country['Country'] == iso3);
+    return result[0]['Unique Dataset Count'];
+  }
+
 
   function initTracking() {
     //initialize mixpanel
