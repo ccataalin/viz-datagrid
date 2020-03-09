@@ -69,7 +69,7 @@ $( document ).ready(function() {
       chartName = country.key + "Chart";
       var countryName = getCountryName(country.key);
       var datasetCount = getDatasetCount(country.key);
-      $('.charts').append("<div class='col-2 country-chart'><div class='chart-header'><img src='assets/flags/__" + country.key + ".png'/><div>" + countryName + "<span>" + datasetCount + " datasets</span></div></div><div class='chart " + chartName + "'></div></div>");
+      $('.charts').append("<div class='col-2 country-chart'><div class='chart-header'><img src='assets/flags/" + country.key + ".png'/><div>" + countryName + "<span>" + datasetCount + " datasets</span></div></div><div class='chart " + chartName + "'></div></div>");
       
       //metric 
       country.values.forEach(function(metric, index) {
