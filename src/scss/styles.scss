@@ -51,13 +51,13 @@ h2 {
 	font-family: 'Gotham-Bold', sans-serif;
 	font-size: 16px;
 	font-weight: normal;
-	line-height: 41px;
-	padding-left: 22px;
+	line-height: 49px;
+	padding-left: 20px;
 }
 
 h3 {
 	font-family: 'Gotham-Bold', sans-serif;
-	font-size: 12px;
+	font-size: 14px;
 	line-height: 21px;
 	font-weight: normal;
 }
@@ -116,7 +116,7 @@ ul.actions {
 	font-family: 'Gotham-Light', sans-serif;
 	font-size: 52px;
 	line-height: 52px;
-	margin-left: -4px;
+	min-height: 81px;
 	padding: 10px 0;
 	span {
 		font-size: 26px;
@@ -125,15 +125,32 @@ ul.actions {
 
 .date {
 	color: #888;
+	padding-bottom: 20px;
 }
 
-.overview {
-	margin-bottom: 20px;
+.stats {
+	margin: 5px 0 20px;
+}
+
+.overview-container {
+	display: flex;
+	flex-flow: row;
+	.donut-chart {
+		margin-top: 30px;
+		width: 30%;
+	}
+	.stats {
+		display: flex;
+		flex-wrap: wrap;
+	}
 }
 
 .key-figure {
-	border-bottom: 1px solid #CCC;
-	padding-bottom: 15px;
+	padding: 0 14px 5px;
+	width: 33%;
+	.inner {
+		border-bottom: 1px solid #CCC;
+	}
 }
 
 .legend {
@@ -156,19 +173,36 @@ ul.actions {
 	}
 }
 
+.total-line {
+	bottom: 51px;
+	left: -15px;
+	height: 1px;
+	overflow: visible;
+	position: absolute;
+	line {
+		stroke: #f26b61 !important;
+	}
+}
+
 .categories {
-	margin-top: 60px;
-	text-align: right;
+	margin-top: 68px;
+	position: relative;
 	ul li {
-		padding-bottom: 6px;
+		display: flex;
+    justify-content: flex-end;
+		padding-bottom: 5px;
 		> div {
 			display: inline-block;
 			text-align: center;
 			width: 20px;
 			i {
 				font-size: 16px;
+				margin-left: 8px;
 			}
 		}
+	}
+	.total-line {
+		left: 0;
 	}
 }
 
@@ -180,9 +214,10 @@ ul.actions {
     align-items: center;
 		display: flex;
 		font-family: 'Gotham-Bold', sans-serif;
-		font-size: 11px;
-		line-height: 13px;
+		font-size: 12px;
+		line-height: 14px;
 		margin-bottom: 15px;
+		max-height: 40px;
 		text-transform: uppercase;
 		img {
 			border-radius: 50%;
@@ -202,10 +237,11 @@ ul.actions {
 	background-color: #000;
 	border-radius: 3px;
 	color: #FFF;
+	display: none;
 	font-size: 11px;
 	line-height: 28px;
 	padding: 0 15px;
-	transform: translateY(-52px);
+	position: absolute;
   &:after {
     border-color: rgba(0, 0, 0, 0);
     border: solid transparent;
@@ -220,6 +256,22 @@ ul.actions {
     top: 100%;
     width: 0;
   }
+}
+
+.mobile-select {
+	display: none;
+	margin-bottom: 10px;
+	width: 50%;
+	label {
+		color: #888;
+		margin-bottom: 5px;
+	}
+	select {
+		background-color: #FFF;
+		border: 1px solid #CCC;
+		border-radius: 5px;
+		padding: 5px;
+	}
 }
 
 //c3 styles
@@ -243,6 +295,7 @@ ul.actions {
 
 .c3-chart-text {
 	text {
+		font-size: 12px;
 		transform: translateX(-8px);
     text-anchor: end;
 	}
@@ -280,18 +333,66 @@ ul.actions {
 
 .donut-legend-title {
 	font-family: 'Gotham-Bold', sans-serif;
-	font-size: 12px;
+	font-size: 14px;
+	transform: translate(-15px, 0);
 }
 
 
 @media only screen and (max-width: 767px) {
-	.logos {
-		.grid-container > div {
-			padding: 0;
-			text-align: center;
+	main {
+		padding: 0 10px;
+	}
+	h2 {
+		font-size: 13px;
+		padding-left: 15px;
+	}
+	.mobile-select {
+		display: block;
+		select {
+			margin: 5px 0 15px;
 		}
-		img {
-			margin: 10px;
+	}
+	.legend {
+		justify-content: flex-start;
+	}
+	.country-chart {
+		display: none;
+		overflow: hidden;
+		.chart-header {
+			height: 48px;
+			max-height: 48px;
+		}
+		&.show {
+			display: block;
+		}
+	}
+	.categories {
+		display: none;
+		margin-top: 75px;
+		&.category-list1 {
+			display: block;
+		}
+		ul li {
+			padding-bottom: 9px;
+			> div {
+				display: none;
+			}
+		}
+	}
+	.overview-container {
+		flex-flow: column;
+		.donut-chart {
+			width: 100%;
+		}
+		.stats {
+			margin-top: 40px;
+		}		
+		.key-figure {
+			width: 50%;
+			h3 {
+				line-height: 16px;
+				height: 32px;
+			}
 		}
 	}
 }
