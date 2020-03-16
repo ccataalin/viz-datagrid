@@ -1,5 +1,6 @@
 @import '_grid';
 @import '_fonts';
+@import '_loader';
 
 * {
 	box-sizing: border-box;
@@ -32,6 +33,11 @@ footer {
 	background-color: #353535;
 	color: #FFF;
 	padding: 20px 0 10px;
+}
+
+main,
+footer {
+	opacity: 0;
 }
 
 ul {
@@ -207,6 +213,7 @@ ul.actions {
 }
 
 .country-chart {
+	cursor: pointer;
 	svg {
 		overflow: visible !important;
 	}
@@ -338,7 +345,7 @@ ul.actions {
 }
 
 
-@media only screen and (max-width: 767px) {
+@media only screen and (max-width: 768px) {
 	main {
 		padding: 0 10px;
 	}
