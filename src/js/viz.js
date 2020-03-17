@@ -56,7 +56,7 @@ $( document ).ready(function() {
 
     //group the data by country
     var groupByCountry = d3.nest()
-      .key(function(d) { return d['ISO3']; })
+      .key(function(d) { return d['Location']; })
       .key(function(d) { return d['Metric']; })
       .key(function(d) { return d['Category']; })
       .rollup(function(v) { return v[0]['Percentage']; })
@@ -76,19 +76,21 @@ $( document ).ready(function() {
       Incomplete: [],
       Empty: [],
     };
-    countries.forEach(function(country) {
+
+    countries.sort(compare);
+    countries.forEach(function(country, index) {
       //display categories in 1st column of every row
       count = (count==3) ? 0 : count+1;
       if (count==1) createCategories(categories);
 
       //create chart markup for each country
       chartData = [];
-      chartName = country.key + "Chart";
-      var countryName = getCountryName(country.key);
-      var datasetCount = getDatasetCount(country.key);
+      var countryCode = getCountryCode(country.key);
+      chartName = countryCode + "Chart";
+      var datasetCount = getDatasetCount(countryCode);
       var colspan = (isMobile) ? 'col-1' : 'col-2';
-      var status = (country.key == 'AFG') ? 'show' : '';
-      $('.charts').append("<div class='" + colspan + " country-chart " + country.key + " " + status + "' data-country='" + country.key + "'><div class='chart-header'><img src='assets/flags/" + country.key + ".png'/><div>" + countryName + "<span>" + datasetCount + " datasets</span></div></div><div class='chart " + chartName + "'></div></div>");
+      var status = (index == 0) ? 'show' : '';
+      $('.charts').append("<div class='" + colspan + " country-chart " + countryCode + " " + status + "' data-country='" + countryCode + "'><div class='chart-header'><img src='assets/flags/" + countryCode + ".png'/><div>" + country.key + "<span>" + datasetCount + " datasets</span></div></div><div class='chart " + chartName + "'></div></div>");
       
       //metric 
       country.values.forEach(function(metric, index) {
@@ -108,7 +110,7 @@ $( document ).ready(function() {
 
       //build country dropdown
       $('.country-select').append(
-        $('<option></option>').val(country.key).html(countryName)
+        $('<option></option>').val(countryCode).html(country.key)
       );
     });
 
@@ -289,6 +291,10 @@ $( document ).ready(function() {
         .attr('x2', 241);
   }
 
+  function getCountryCode(name) {
+    const result = countryNames.filter(country => country['M49 Country or Area'] == name);
+    return result[0]['ISO-alpha3 code'];
+  }
 
   function getCountryName(iso3) {
     const result = countryNames.filter(country => country['ISO-alpha3 code'] == iso3);
