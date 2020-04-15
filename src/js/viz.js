@@ -90,8 +90,15 @@ $( document ).ready(function() {
       var datasetCount = getDatasetCount(countryCode);
       var colspan = (isMobile) ? 'col-1' : 'col-2';
       var status = (index == 0) ? 'show' : '';
-      $('.charts').append("<div class='" + colspan + " country-chart " + countryCode + " " + status + "' data-country='" + countryCode + "'><div class='chart-header'><img src='assets/flags/" + countryCode + ".png'/><div>" + country.key + "<span>" + datasetCount + " datasets</span></div></div><div class='chart " + chartName + "'></div></div>");
+      var flagURL = 'assets/flags/' + countryCode + '.png';
+
+      $('.charts').append("<div class='" + colspan + " country-chart " + countryCode + " " + status + "' data-country='" + countryCode + "'><div class='chart-header'><img class='flag' src='" + flagURL + "' /><div>" + country.key + "<span>" + datasetCount + " datasets</span></div></div><div class='chart " + chartName + "'></div></div>");
       
+      //default missing flags to blank spacer img
+      $('.flag').on('error', function(){
+        $(this).attr('src', 'assets/flags/default.png');
+      });
+
       //metric 
       country.values.forEach(function(metric, index) {
         metric.values.sort(compare);
