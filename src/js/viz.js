@@ -149,9 +149,9 @@ $( document ).ready(function() {
 
   function createOverview(totals) {
     //donut chart
-    totals['Complete'] = Math.round(d3.mean(totals['Complete']));
-    totals['Incomplete'] = Math.round(d3.mean(totals['Incomplete']));
-    totals['Empty'] = Math.round(d3.mean(totals['Empty']));
+    totals['Complete'] = Math.round(globalCounts['Total Percentage Data Complete']*100);
+    totals['Incomplete'] = Math.round(globalCounts['Total Percentage Data Incomplete']*100);
+    totals['Empty'] = Math.round(globalCounts['Total Percentage No Data']*100);
     var metricTotals = Object.entries(totals);
 
     var chart = c3.generate({
