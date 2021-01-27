@@ -72,11 +72,6 @@ $( document ).ready(function() {
   function generateCharts(categories, countries) {
     var chartName, chartData;
     var count = 0;
-    var totals = {
-      Complete: [],
-      Incomplete: [],
-      Empty: [],
-    };
 
     countries.sort(compare);
     countries.forEach(function(country, index) {
@@ -88,10 +83,11 @@ $( document ).ready(function() {
       chartData = [];
       var countryCode = getCountryCode(country.key);
       chartName = countryCode + "Chart";
-      var datasetCount = getDatasetCount(countryCode);
+      var datasetCount = getDataByCountry(countryCode, 'Unique Dataset Count');
       var colspan = (isMobile) ? 'col-1' : 'col-2';
       var status = (index == 0) ? 'show' : '';
       var flagURL = 'assets/flags/' + countryCode + '.png';
+      var indicatorArray = ['Percentage Data Complete','Percentage Data Incomplete','Percentage No Data'];
 
       $('.charts').append("<div class='" + colspan + " country-chart " + countryCode + " " + status + "' data-country='" + countryCode + "'><div class='chart-header'><img class='flag' src='" + flagURL + "' /><div>" + country.key + "<span>" + datasetCount + " datasets</span></div></div><div class='chart " + chartName + "'></div></div>");
       
@@ -108,10 +104,9 @@ $( document ).ready(function() {
         metric.values.forEach(function(category) {
           values.push(Math.round(category.value*100));
         });
-        //mean
-        var mean = Math.round(d3.mean(values));
-        totals[metric.key].push(mean)
-        values.push(mean);
+        //totals
+        var totalVal = getDataByCountry(countryCode, indicatorArray[index]);
+        values.push(Math.round(totalVal*100));
         chartData.push(values);
       });
       createBarChart(chartName, chartData);
@@ -122,7 +117,7 @@ $( document ).ready(function() {
       );
     });
 
-    createOverview(totals);
+    createOverview();
 
     //select events for mobile country dropdown
     $('.country-select').change(onCountrySelect);
@@ -147,7 +142,8 @@ $( document ).ready(function() {
   }
 
 
-  function createOverview(totals) {
+  function createOverview() {
+    var totals = new Object();
     //donut chart
     totals['Complete'] = Math.round(globalCounts['Total Percentage Data Complete']*100);
     totals['Incomplete'] = Math.round(globalCounts['Total Percentage Data Incomplete']*100);
@@ -309,11 +305,10 @@ $( document ).ready(function() {
     return result[0]['M49 Country or Area'];
   }
 
-  function getDatasetCount(iso3) {
+  function getDataByCountry(iso3, indicator) {
     const result = datasetCounts.filter(country => country['ISO3'] == iso3);
-    return result[0]['Unique Dataset Count'];
+    return result[0][indicator];
   }
-
 
   function initTracking() {
     //initialize mixpanel
