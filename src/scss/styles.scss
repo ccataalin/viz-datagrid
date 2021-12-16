@@ -54,6 +54,7 @@ a {
 h2 {
 	background-color: #EDF6FD;
 	border-bottom: 1px solid #CCC;
+	color: #000;
 	font-family: 'Gotham-Bold', sans-serif;
 	font-size: 16px;
 	font-weight: normal;
@@ -344,6 +345,13 @@ ul.actions {
 	transform: translate(-15px, 0);
 }
 
+
+#subcategory-view {
+	border: 0;
+	height: 730px;
+	margin-bottom: 50px;
+	width: 100%;
+}
 
 @media only screen and (max-width: 768px) {
 	main {
