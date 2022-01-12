@@ -24,6 +24,11 @@
         <div class='col-7'>
           <p>The Data Grid places the most important crisis data into six categories and several sub-categories. Relevant data is included in the Data Grid if it is sub-national, in a common format, and timely.</p>
           <p>If at least one dataset meets all criteria, that subcategory is considered ‘complete’. If at least one dataset meets some of these criteria, the sub-category is considered ‘incomplete’. If a dataset does not meet the criteria or does not exist on HDX, the sub-category is considered empty or as having no data.</p>
+          <p>
+            <a href='#overview'>Global Overview</a><br>
+            <a href='#category'>Datagrid Completeness by Location and Category</a><br>
+            <a href='#subcategory'>Datagrid Completeness by Location and Sub-category</a><br>
+          </p>
         </div>
 
         <div class='col-3'>
@@ -39,7 +44,7 @@
 
       <div class='grid-container'>
         <div class='col-10'>
-          <h2>Global Overview</h2>
+          <a id='overview'><h2>Global Overview</h2></a>
         </div>
       </div>
 
@@ -54,7 +59,7 @@
 
       <div class='grid-container'>
         <div class='col-10'>
-          <h2>Data Grid Completeness by Location and Category</h2>
+          <a id='category'><h2>Data Grid Completeness by Location and Category</h2></a>
           <div class='legend small'>
             Data Completeness: <div class='chip chip-complete'></div> Complete <div class='chip chip-incomplete'></div> Incomplete <div class='chip chip-nodata'></div> No data
           </div>
@@ -66,6 +71,9 @@
       </div>
 
       <div class='grid-container charts'></div>
+      <div class='grid-container subcategory-container'>
+        <div class='col-10'><a id='subcategory'></a></div>
+      </div>
     </main>
 
     <div class='tooltip tooltip-custom'></div>
