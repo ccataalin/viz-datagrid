@@ -1,5 +1,6 @@
 $( document ).ready(function() {
-  const DATA_PATH = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTnZMN1guJCB44f-O6iP-JpNum4NJdL5Op5GEbrkAayk_V19UkmO56YzQ2vSsfVCVWl5eyOT-Yhh4Y-/pub?single=true&output=csv&gid=';
+  //const DATA_PATH = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTnZMN1guJCB44f-O6iP-JpNum4NJdL5Op5GEbrkAayk_V19UkmO56YzQ2vSsfVCVWl5eyOT-Yhh4Y-/pub?single=true&output=csv&gid=';
+  const DATA_PATH = 'https://proxy.hxlstandard.org/api/data-preview.csv?url=https%3A%2F%2Fdocs.google.com%2Fspreadsheets%2Fd%2Fe%2F2PACX-1vTnZMN1guJCB44f-O6iP-JpNum4NJdL5Op5GEbrkAayk_V19UkmO56YzQ2vSsfVCVWl5eyOT-Yhh4Y-%2Fpub%3Foutput%3Dcsv%26gid%3D'
   const DATA_ID = 1103779481;
   const DATASET_COUNTS_ID = 733089483;
   const GLOBAL_COUNTS_ID = 2045883069;
@@ -74,11 +75,6 @@ $( document ).ready(function() {
   function generateCharts(categories, countries) {
     var chartName, chartData;
     var count = 0;
-    var totals = {
-      Complete: [],
-      Incomplete: [],
-      Empty: [],
-    };
 
     countries.sort(compare);
     countries.forEach(function(country, index) {
@@ -90,11 +86,19 @@ $( document ).ready(function() {
       chartData = [];
       var countryCode = getCountryCode(country.key);
       chartName = countryCode + "Chart";
-      var datasetCount = getDatasetCount(countryCode);
+      var datasetCount = getDataByCountry(countryCode, 'Unique Dataset Count');
       var colspan = (isMobile) ? 'col-1' : 'col-2';
       var status = (index == 0) ? 'show' : '';
-      $('.charts').append("<div class='" + colspan + " country-chart " + countryCode + " " + status + "' data-country='" + countryCode + "'><div class='chart-header'><img src='assets/flags/" + countryCode + ".png'/><div>" + country.key + "<span>" + datasetCount + " datasets</span></div></div><div class='chart " + chartName + "'></div></div>");
+      var flagURL = 'assets/flags/' + countryCode + '.png';
+      var indicatorArray = ['Percentage Data Complete','Percentage Data Incomplete','Percentage No Data'];
+
+      $('.charts').append("<div class='" + colspan + " country-chart " + countryCode + " " + status + "' data-country='" + countryCode + "'><div class='chart-header'><img class='flag' src='" + flagURL + "' /><div>" + country.key + "<span>" + datasetCount + " datasets</span></div></div><div class='chart " + chartName + "'></div></div>");
       
+      //default missing flags to blank spacer img
+      $('.flag').on('error', function(){
+        $(this).attr('src', 'assets/flags/default.png');
+      });
+
       //metric 
       country.values.forEach(function(metric, index) {
         metric.values.sort(compare);
@@ -103,10 +107,9 @@ $( document ).ready(function() {
         metric.values.forEach(function(category) {
           values.push(Math.round(category.value*100));
         });
-        //mean
-        var mean = Math.round(d3.mean(values));
-        totals[metric.key].push(mean)
-        values.push(mean);
+        //totals
+        var totalVal = getDataByCountry(countryCode, indicatorArray[index]);
+        values.push(Math.round(totalVal*100));
         chartData.push(values);
       });
       createBarChart(chartName, chartData);
@@ -117,7 +120,7 @@ $( document ).ready(function() {
       );
     });
 
-    createOverview(totals);
+    createOverview();
 
     //select events for mobile country dropdown
     $('.country-select').change(onCountrySelect);
@@ -142,11 +145,12 @@ $( document ).ready(function() {
   }
 
 
-  function createOverview(totals) {
+  function createOverview() {
+    var totals = new Object();
     //donut chart
-    totals['Complete'] = Math.round(d3.mean(totals['Complete']));
-    totals['Incomplete'] = Math.round(d3.mean(totals['Incomplete']));
-    totals['Empty'] = Math.round(d3.mean(totals['Empty']));
+    totals['Complete'] = Math.round(globalCounts['Total Percentage Data Complete']*100);
+    totals['Incomplete'] = Math.round(globalCounts['Total Percentage Data Incomplete']*100);
+    totals['Empty'] = Math.round(globalCounts['Total Percentage No Data']*100);
     var metricTotals = Object.entries(totals);
 
     var chart = c3.generate({
@@ -304,11 +308,10 @@ $( document ).ready(function() {
     return result[0]['M49 Country or Area'];
   }
 
-  function getDatasetCount(iso3) {
+  function getDataByCountry(iso3, indicator) {
     const result = datasetCounts.filter(country => country['ISO3'] == iso3);
-    return result[0]['Unique Dataset Count'];
+    return result[0][indicator];
   }
-
 
   function initTracking() {
     //initialize mixpanel
