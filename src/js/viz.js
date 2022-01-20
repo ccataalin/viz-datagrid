@@ -317,7 +317,9 @@ $( document ).ready(function() {
 
   function deepLinkView() {
     var hash = window.location.hash;
-    if (hash!='') window.location.href = hash;
+    if (hash!='') {
+      window.location.href = hash;
+    }
   }
 
   function initTracking() {
