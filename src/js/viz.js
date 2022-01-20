@@ -39,6 +39,8 @@ $( document ).ready(function() {
       $('.loader').hide();
       $('main, footer').css('opacity', 1);
 
+      deepLinkView();
+
       //load the subcategory view
       $('.subcategory-container div a').html('<iframe id="subcategory-view" src="https://ocha-dap.github.io/viz-datagrid-subcategories"></iframe>'); 
     });
@@ -311,6 +313,11 @@ $( document ).ready(function() {
   function getDataByCountry(iso3, indicator) {
     const result = datasetCounts.filter(country => country['ISO3'] == iso3);
     return result[0][indicator];
+  }
+
+  function deepLinkView() {
+    var hash = window.location.hash;
+    if (hash!='') window.location.href = hash;
   }
 
   function initTracking() {
