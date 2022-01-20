@@ -316,9 +316,9 @@ $( document ).ready(function() {
   }
 
   function deepLinkView() {
-    var hash = window.location.hash;
-    if (hash!='') {
-      window.location.href = hash;
+    var parentHash = window.parent.location.hash;
+    if (parentHash!='') {
+      window.location.href = parentHash;
     }
   }
 
