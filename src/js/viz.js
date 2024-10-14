@@ -316,11 +316,16 @@ $( document ).ready(function() {
   }
 
   function deepLinkView() {
-    var parentHash = window.parent.location.hash;
-    if (parentHash!='') {
-      window.location.href = parentHash;
+    try {
+      var parentHash = window.parent.location.hash;
+      if (parentHash != '') {
+        window.location.href = parentHash;
+      }
+    } catch (e) {
+      console.warn('Unable to access window.parent.location.hash due to cross-origin restrictions:', e);
     }
   }
+
 
   function initTracking() {
     //initialize mixpanel
