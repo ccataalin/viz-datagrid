@@ -10,7 +10,7 @@ $( document ).ready(function() {
   var countryCount, categoryCount, globalCounts, date;
   var rowCount = 0;
   var metricColors = {data1: '#007CE1', data2: '#C0D7EB', data3: '#E6E7E8'};
-  var metricNames = {data1: 'Available', data2: 'Unavailable', data3: 'No data'}
+  var metricNames = {data1: 'Available', data2: 'Not Up-to-date', data3: 'Unavailable'}
   var countryNames, datasetCounts = [];
 
   var tooltipActive = false;
@@ -95,7 +95,7 @@ $( document ).ready(function() {
       var colspan = (isMobile) ? 'col-1' : 'col-2';
       var status = (index == 0) ? 'show' : '';
       var flagURL = 'assets/flags/' + countryCode + '.png';
-      var indicatorArray = ['Percentage Data Complete','Percentage Data Incomplete','Percentage No Data'];
+      var indicatorArray = ['Percentage Data Complete','Percentage Data Incomplete','Percentage Unavailable'];
 
       $('.charts').append("<div class='" + colspan + " country-chart " + countryCode + " " + status + "' data-country='" + countryCode + "'><div class='chart-header'><img class='flag' src='" + flagURL + "' /><div>" + country.key + "<span>" + datasetCount + " datasets</span></div></div><div class='chart " + chartName + "'></div></div>");
       
@@ -154,7 +154,7 @@ $( document ).ready(function() {
     var totals = new Object();
     //donut chart
     totals['Available'] = Math.round(globalCounts['Total Percentage Data Complete']*100);
-    totals['Unavailable'] = Math.round(globalCounts['Total Percentage Data Incomplete']*100);
+    totals['Not Up-to-date'] = Math.round(globalCounts['Total Percentage Data Incomplete']*100);
     totals['Empty'] = Math.round(globalCounts['Total Percentage No Data']*100);
     var metricTotals = Object.entries(totals);
 
@@ -166,7 +166,7 @@ $( document ).ready(function() {
       data: {
         columns: [
             ['data1', totals['Available']],
-            ['data2', totals['Unavailable']],
+            ['data2', totals['Not Up-to-date']],
             ['data3', totals['Empty']]
         ],
         type: 'donut',
@@ -198,7 +198,7 @@ $( document ).ready(function() {
 
     //key figures
     metricTotals.forEach(function(metric, index) {
-      var title = (metric[0] == 'Empty') ? 'Total Percentage No Data' : 'Total Percentage Data ' + metric[0];
+      var title = (metric[0] == 'Empty') ? 'Total Percentage Unavailable' : 'Total Percentage ' + metric[0];
       var value = metric[1] + '<span>%</span>';
       createKeyFigure(title, value);
     });
