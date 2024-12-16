@@ -1,6 +1,6 @@
-@import '_grid';
-@import '_fonts';
-@import '_loader';
+@use 'grid';
+@use 'fonts';
+@use 'loader';
 
 * {
 	box-sizing: border-box;
@@ -160,6 +160,7 @@ ul.actions {
 	width: 33%;
 	.inner {
 		border-bottom: 1px solid #CCC;
+		text-wrap-mode: nowrap;
 	}
 }
 

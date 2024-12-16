@@ -10,7 +10,7 @@ $( document ).ready(function() {
   var countryCount, categoryCount, globalCounts, date;
   var rowCount = 0;
   var metricColors = {data1: '#007CE1', data2: '#C0D7EB', data3: '#E6E7E8'};
-  var metricNames = {data1: 'Complete', data2: 'Incomplete', data3: 'No data'}
+  var metricNames = {data1: 'Available', data2: 'Unavailable', data3: 'No data'}
   var countryNames, datasetCounts = [];
 
   var tooltipActive = false;
@@ -35,6 +35,8 @@ $( document ).ready(function() {
       datasetCounts = data[1];
       parseData(data[0]);
 
+      console.log(data)
+
       //remove loader and show vis
       $('.loader').hide();
       $('main, footer').css('opacity', 1);
@@ -42,7 +44,8 @@ $( document ).ready(function() {
       deepLinkView();
 
       //load the subcategory view
-      $('.subcategory-container div a').html('<iframe id="subcategory-view" src="https://ocha-dap.github.io/viz-datagrid-subcategories"></iframe>'); 
+      // $('.subcategory-container div a').html('<iframe id="subcategory-view" src="https://ocha-dap.github.io/viz-datagrid-subcategories"></iframe>'); 
+      $('.subcategory-container div a').html('<iframe id="subcategory-view" src="https://baripembo.github.io/viz-datagrid-subcategories"></iframe>'); 
     });
   }
 
@@ -150,8 +153,8 @@ $( document ).ready(function() {
   function createOverview() {
     var totals = new Object();
     //donut chart
-    totals['Complete'] = Math.round(globalCounts['Total Percentage Data Complete']*100);
-    totals['Incomplete'] = Math.round(globalCounts['Total Percentage Data Incomplete']*100);
+    totals['Available'] = Math.round(globalCounts['Total Percentage Data Complete']*100);
+    totals['Unavailable'] = Math.round(globalCounts['Total Percentage Data Incomplete']*100);
     totals['Empty'] = Math.round(globalCounts['Total Percentage No Data']*100);
     var metricTotals = Object.entries(totals);
 
@@ -162,8 +165,8 @@ $( document ).ready(function() {
       bindto: '.donut-chart',
       data: {
         columns: [
-            ['data1', totals['Complete']],
-            ['data2', totals['Incomplete']],
+            ['data1', totals['Available']],
+            ['data2', totals['Unavailable']],
             ['data3', totals['Empty']]
         ],
         type: 'donut',
@@ -188,7 +191,7 @@ $( document ).ready(function() {
     legendContainer
       .attr('class', 'donut-legend-container')
       .append('text')
-      .text('Global Data Grid Completeness:')
+      .text('Global Data Grid Availability:')
       .attr('class', 'donut-legend-title')
       .attr('x', legendX - 10)
       .attr('y', legendY - 20);
