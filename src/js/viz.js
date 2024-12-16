@@ -39,6 +39,8 @@ $( document ).ready(function() {
       $('.loader').hide();
       $('main, footer').css('opacity', 1);
 
+      deepLinkView();
+
       //load the subcategory view
       $('.subcategory-container div a').html('<iframe id="subcategory-view" src="https://ocha-dap.github.io/viz-datagrid-subcategories"></iframe>'); 
     });
@@ -312,6 +314,18 @@ $( document ).ready(function() {
     const result = datasetCounts.filter(country => country['ISO3'] == iso3);
     return result[0][indicator];
   }
+
+  function deepLinkView() {
+    try {
+      var parentHash = window.parent.location.hash;
+      if (parentHash != '') {
+        window.location.href = parentHash;
+      }
+    } catch (e) {
+      console.warn('Unable to access window.parent.location.hash due to cross-origin restrictions:', e);
+    }
+  }
+
 
   function initTracking() {
     //initialize mixpanel
