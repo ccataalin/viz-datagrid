@@ -1,10 +1,16 @@
 $( document ).ready(function() {
   //const DATA_PATH = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTnZMN1guJCB44f-O6iP-JpNum4NJdL5Op5GEbrkAayk_V19UkmO56YzQ2vSsfVCVWl5eyOT-Yhh4Y-/pub?single=true&output=csv&gid=';
-  const DATA_PATH = 'https://proxy.hxlstandard.org/api/data-preview.csv?url=https%3A%2F%2Fdocs.google.com%2Fspreadsheets%2Fd%2Fe%2F2PACX-1vTnZMN1guJCB44f-O6iP-JpNum4NJdL5Op5GEbrkAayk_V19UkmO56YzQ2vSsfVCVWl5eyOT-Yhh4Y-%2Fpub%3Foutput%3Dcsv%26gid%3D'
+
+  //const DATA_PATH = 'https://proxy.hxlstandard.org/api/data-preview.csv?url=https%3A%2F%2Fdocs.google.com%2Fspreadsheets%2Fd%2Fe%2F2PACX-1vRguxePjzXGhVXDTL6-JuS5Vppx7fKnk-CBheunS_5RGDKV36tOfLHa5RZ94oO2pDCLcdNC8BBisJzT%2Fpub%3Foutput%3Dcsv%26gid%3D'
+  const DATA_PATH = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRguxePjzXGhVXDTL6-JuS5Vppx7fKnk-CBheunS_5RGDKV36tOfLHa5RZ94oO2pDCLcdNC8BBisJzT/pub?single=true&output=csv&gid=';
   const DATA_ID = 1103779481;
   const DATASET_COUNTS_ID = 733089483;
   const GLOBAL_COUNTS_ID = 2045883069;
-  const COUNTRIES_ID = 735983640;
+  // const DATA_PATH = 'https://proxy.hxlstandard.org/api/data-preview.csv?url=https%3A%2F%2Fdocs.google.com%2Fspreadsheets%2Fd%2Fe%2F2PACX-1vTnZMN1guJCB44f-O6iP-JpNum4NJdL5Op5GEbrkAayk_V19UkmO56YzQ2vSsfVCVWl5eyOT-Yhh4Y-%2Fpub%3Foutput%3Dcsv%26gid%3D'
+  // const DATA_ID = 1103779481;
+  // const DATASET_COUNTS_ID = 733089483;
+  // const GLOBAL_COUNTS_ID = 2045883069;
+  // const COUNTRIES_ID = 735983640;
 
   var isMobile = $(window).width()<=768 ? true : false;
   var countryCount, categoryCount, globalCounts, date;
@@ -27,15 +33,17 @@ $( document ).ready(function() {
     Promise.all([
       d3.csv(DATA_PATH + DATA_ID),
       d3.csv(DATA_PATH + DATASET_COUNTS_ID),
-      d3.csv(DATA_PATH + GLOBAL_COUNTS_ID),
-      d3.csv(DATA_PATH + COUNTRIES_ID)
+      d3.csv(DATA_PATH + GLOBAL_COUNTS_ID)
     ]).then(function(data){
-      countryNames = data[3];
       globalCounts = data[2][0];
       datasetCounts = data[1];
-      parseData(data[0]);
 
-      console.log(data)
+      countryNames = datasetCounts.map(row => ({
+        "ISO-alpha3 code": row.ISO3,
+        "M49 Country or Area": row.Location
+      }));
+
+      parseData(data[0]);
 
       //remove loader and show vis
       $('.loader').hide();
@@ -218,7 +226,7 @@ $( document ).ready(function() {
   function createCategories(categories) {
     rowCount++;
     var colspan = (isMobile) ? 'col-1' : 'col-2';
-    var icons = ['Affected-population', 'Coordination', 'Food-Security', 'Location', 'Health', 'People-in-need'];
+    var icons = ['Affected-population', 'Drought', 'Coordination', 'Food-Security', 'Location', 'Health'];
     $('.charts').append("<div class='" + colspan + " categories category-list" + rowCount + "'><ul class='small'></ul></div>");
 
     categories.forEach(function(category, index) {
